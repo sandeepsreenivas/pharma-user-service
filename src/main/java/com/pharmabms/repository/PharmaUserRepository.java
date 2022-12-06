@@ -6,4 +6,6 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface PharmaUserRepository extends JpaRepository<PharmaUser, String> {
+    PharmaUser findPharmaUserByMobileNumber(String mobileNumber);
+    PharmaUser findPharmaUserByEmail(String email);
 }

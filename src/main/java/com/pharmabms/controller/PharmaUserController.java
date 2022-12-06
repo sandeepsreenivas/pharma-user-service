@@ -2,6 +2,8 @@ package com.pharmabms.controller;
 
 import com.pharmabms.dto.CreateUserRequest;
 import com.pharmabms.dto.CreateUserResponse;
+import com.pharmabms.exceptions.EmailExistsException;
+import com.pharmabms.exceptions.MobileNumberExistsException;
 import com.pharmabms.service.PharmaUserService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,14 +23,12 @@ public class PharmaUserController {
     private PharmaUserService pharmaUserService;
 
     @PostMapping("/register")
-    public ResponseEntity<CreateUserResponse> createUser(@RequestBody CreateUserRequest request) {
-        CreateUserResponse response = new CreateUserResponse();
-        try {
-            response = pharmaUserService.createUser(request);
-        } catch (Exception e) {
-            log.error("Error while registering user : {}", request, e.getMessage());
-        }
-        return ResponseEntity.status(HttpStatus.CREATED).body(response);
+    public ResponseEntity<CreateUserResponse> createUser(@RequestBody CreateUserRequest request)
+            throws MobileNumberExistsException, EmailExistsException {
+        log.info("Started creating user : {}", request);
+        CreateUserResponse response = pharmaUserService.createUser(request);
+        log.info("Completed user creation !!");
+        return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
 
 }
